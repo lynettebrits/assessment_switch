@@ -1,0 +1,72 @@
+Question 3
+Fix any problems you can find with the following tables. Show the SQL queries needed to create your
+improved/new tables and explain why you have made the changes:
+Student Table
+name(varchar, PK) age(int) grade(int) classTeacher(varchar) subjects(varchar)
+Johnny Jones 17 12 Robin Smith Eng/Afr/Math/Sci/Hist/Comp
+Susan King 16 11 John Doe Afr/Eng/Math/Sci/Geo/Hist
+… … … … …
+Teacher Table
+name(varchar, PK) subjects(varchar) headOfGrade(varchar) salary(int)
+Robin Smith Hist Yes 10000
+John Doe Hist/Math No 5000
+…
+
+My answer explained:
+- I have added an ID field to both the students and teachers table and set these as the primary keys
+- In the student table I amended the teacher table to rather utilise the teacher_id column
+- In the student table I have added the ID's of subjects (new table) and have pipe separated these
+- In the teacher table I have added the ID's of subjects (new table) and have pipe separated these
+- In the teacher table I have amended the salary column to be a decimal as opposed to an integer
+- In the teacher table I have amended the head_of_grade column to be a tinu int that defaults to 0 (not a head of grade), if the teacher is a head of grade the value will be 1
+- I have created a new table - subjects - to deal with the subject columns as relevant
+
+DROP TABLE IF EXISTS `student`;
+CREATE TABLE IF NOT EXISTS `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `grade` int(11) DEFAULT NULL,
+  `teacher_id` int(11) DEFAULT NULL,
+  `subjects` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `student_id_uindex` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+
+INSERT INTO `student` (`id`, `name`, `age`, `grade`, `teacher_id`, `subjects`) VALUES
+(1, 'Johnny Jones', 17, 12, 1, '1|2|2|4|5|6'),
+(2, 'Susan King', 16, 11, 2, '1|2|2|4|6|7');
+
+DROP TABLE IF EXISTS `teacher`;
+CREATE TABLE IF NOT EXISTS `teacher` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `subjects` text DEFAULT NULL,
+  `head_of_grade` tinyint(4) DEFAULT 0,
+  `salary` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `teacher_id_uindex` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `teacher` (`id`, `name`, `subjects`, `head_of_grade`, `salary`) VALUES
+(1, 'Robin Smith', '5', 1, '10000'),
+(2, 'John Doe', '3|5', 0, '5000');
+
+DROP TABLE IF EXISTS `subjects`;
+CREATE TABLE IF NOT EXISTS `subjects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subject` varchar(255) DEFAULT NULL,
+  `abbreviation` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `subjects_id_uindex` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `subjects` (`id`, `subject`, `abbreviation`) VALUES
+(1, 'English', 'Eng'),
+(2, 'Afrikaans', 'Afr'),
+(3, 'Maths', 'Math'),
+(4, 'Science', 'Sci'),
+(5, 'History', 'Hist'),
+(6, 'Computer Science', 'Comp'),
+(7, 'Geography', 'Geo');
